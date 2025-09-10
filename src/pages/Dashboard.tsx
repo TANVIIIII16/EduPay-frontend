@@ -241,12 +241,80 @@ const Dashboard: React.FC = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Transactions</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and view all payment transactions</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Transaction List</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">view all transaction and filter according to your needs</p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-4">
+              <button
+                onClick={handleResetFilters}
+                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 font-medium"
+              >
+                Reset
+              </button>
+
+              <div className="relative">
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => handleStatusFilterChange(e.target.value)}
+                  className="appearance-none px-4 py-2 pr-8 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-32"
+                >
+                  <option value="">Status</option>
+                  <option value="Success">Success</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Failed">Failed</option>
+                </select>
+                <ChevronDownIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              </div>
+
+              <div className="relative">
+                <select
+                  value={sort.direction}
+                  onChange={(e) => {
+                    const newSort = { ...sort, direction: e.target.value as 'asc' | 'desc' };
+                    setSort(newSort);
+                    updateURLParams(filters, newSort, pagination);
+                  }}
+                  className="appearance-none px-4 py-2 pr-8 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-24"
+                >
+                  <option value="desc">Descending</option>
+                  <option value="asc">Ascending</option>
+                </select>
+                <ChevronDownIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              </div>
+
+              <div className="relative">
+                <input
+                  type="date"
+                  value={filters.dateFrom}
+                  onChange={(e) => {
+                    const newFilters = { ...filters, dateFrom: e.target.value };
+                    setFilters(newFilters);
+                    setPagination({ ...pagination, currentPage: 1 });
+                    updateURLParams(newFilters, sort, { ...pagination, currentPage: 1 });
+                  }}
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-40"
+                  placeholder="Select date"
+                />
+              </div>
+
+              <div className="relative">
+                <select
+                  value={rowsPerPage}
+                  onChange={(e) => handleRowsPerPageChange(parseInt(e.target.value))}
+                  className="appearance-none px-4 py-2 pr-8 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-20"
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={30}>30</option>
+                  <option value={50}>50</option>
+                </select>
+                <ChevronDownIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
+
             <div className="relative flex-1 max-w-md search-container">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
@@ -301,74 +369,6 @@ const Dashboard: React.FC = () => {
                   ))}
                 </div>
               )}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="relative">
-                <input
-                  type="date"
-                  value={filters.dateFrom}
-                  onChange={(e) => {
-                    const newFilters = { ...filters, dateFrom: e.target.value };
-                    setFilters(newFilters);
-                    setPagination({ ...pagination, currentPage: 1 });
-                    updateURLParams(newFilters, sort, { ...pagination, currentPage: 1 });
-                  }}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-40"
-                  placeholder="Select date"
-                />
-              </div>
-
-              <div className="relative">
-                <select
-                  value={selectedStatus}
-                  onChange={(e) => handleStatusFilterChange(e.target.value)}
-                  className="appearance-none px-4 py-2 pr-8 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-32"
-                >
-                  <option value="">Status</option>
-                  <option value="Success">Success</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Failed">Failed</option>
-                </select>
-                <ChevronDownIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              </div>
-
-              <div className="relative">
-                <select
-                  value={sort.direction}
-                  onChange={(e) => {
-                    const newSort = { ...sort, direction: e.target.value as 'asc' | 'desc' };
-                    setSort(newSort);
-                    updateURLParams(filters, newSort, pagination);
-                  }}
-                  className="appearance-none px-4 py-2 pr-8 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-24"
-                >
-                  <option value="desc">Descending</option>
-                  <option value="asc">Ascending</option>
-                </select>
-                <ChevronDownIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              </div>
-
-              <div className="relative">
-                <select
-                  value={rowsPerPage}
-                  onChange={(e) => handleRowsPerPageChange(parseInt(e.target.value))}
-                  className="appearance-none px-4 py-2 pr-8 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-20"
-                >
-                  <option value={5}>5</option>
-                  <option value={10}>10</option>
-                  <option value={30}>30</option>
-                  <option value={50}>50</option>
-                </select>
-                <ChevronDownIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              </div>
-
-              <button
-                onClick={handleResetFilters}
-                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 font-medium"
-              >
-                Reset
-              </button>
             </div>
           </div>
         </div>

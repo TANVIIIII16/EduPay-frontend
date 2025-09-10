@@ -23,8 +23,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: HomeIcon },
-    { name: 'Status Check', href: '/status-check', icon: MagnifyingGlassIcon },
-    { name: 'School Transactions', href: '/school-transactions', icon: BanknotesIcon },
+    { name: 'Status by Order id', href: '/status-check', icon: MagnifyingGlassIcon },
+    { name: 'Search by School id', href: '/school-transactions', icon: BanknotesIcon },
   ];
 
   return (
@@ -33,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="flex h-full flex-col">
           <div className="flex h-16 items-center justify-center border-b border-gray-200 dark:border-gray-700">
             <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-              School Payments
+              Payments
             </h1>
           </div>
 

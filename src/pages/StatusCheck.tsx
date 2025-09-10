@@ -66,7 +66,7 @@ const StatusCheck: React.FC = () => {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!orderId.trim()) {
-      toast.error('Please enter a transaction ID');
+      toast.error('Please enter a order ID');
       return;
     }
 
@@ -108,9 +108,9 @@ const StatusCheck: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Transaction Status Check</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Transaction Orders</h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Enter a transaction ID to check its current status
+          Enter a order ID to check its current status
         </p>
       </div>
 
@@ -118,9 +118,16 @@ const StatusCheck: React.FC = () => {
         <form onSubmit={handleSearch} className="space-y-4">
           <div>
             <label htmlFor="order-id" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Transaction ID
+              order ID
             </label>
             <div className="flex space-x-4">
+              <button
+                type="submit"
+                disabled={loading || !orderId.trim()}
+                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Searching...' : 'View'}
+              </button>
               <div className="flex-1 relative status-search-container">
                 <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
@@ -130,7 +137,7 @@ const StatusCheck: React.FC = () => {
                   onChange={handleOrderIdChange}
                   onFocus={() => setShowDropdown((orderId || '').length > 0)}
                   onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
-                  placeholder="Enter transaction ID (e.g., ORDER_001)"
+                  placeholder="Enter order ID (e.g., ORDER_001)"
                   className="input pl-10 pr-10"
                 />
                 <button
@@ -171,13 +178,7 @@ const StatusCheck: React.FC = () => {
                   </div>
                 )}
               </div>
-              <button
-                type="submit"
-                disabled={loading || !orderId.trim()}
-                className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Searching...' : 'Check Status'}
-              </button>
+              
             </div>
           </div>
         </form>
@@ -225,7 +226,7 @@ const StatusCheck: React.FC = () => {
               </h4>
               <dl className="space-y-3">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Transaction ID</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">order ID</dt>
                   <dd className="text-sm text-gray-900 dark:text-white font-mono">{transaction.custom_order_id}</dd>
                 </div>
                 <div>
@@ -316,26 +317,7 @@ const StatusCheck: React.FC = () => {
         </div>
       )}
 
-      <div className="card p-6 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
-        <div className="flex">
-          <div className="flex-shrink-0">
-            <MagnifyingGlassIcon className="h-5 w-5 text-blue-400" />
-          </div>
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">
-              How to find your Transaction ID
-            </h3>
-            <div className="mt-2 text-sm text-blue-700 dark:text-blue-300">
-              <ul className="list-disc list-inside space-y-1">
-                <li>Check your email for payment confirmation</li>
-                <li>Look in your transaction history</li>
-                <li>Contact your school administrator</li>
-                <li>Transaction IDs typically start with "ORDER_" followed by numbers</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 };
